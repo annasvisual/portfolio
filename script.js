@@ -1,29 +1,32 @@
-/* Add your real contact details here. Empty values remain hidden on the page.
-   CV: place your PDF in assets/ and set cv to "assets/anna-kovtun-cv.pdf". */
-const contact = {
-  email: "",
-  linkedin: "",
-  cv: ""
-};
-
-let availableContacts = 0;
-for (const [kind, value] of Object.entries(contact)) {
-  const link = document.querySelector(`[data-contact="${kind}"]`);
-  if (!link || !value.trim()) continue;
-  if (kind === "email") {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) continue;
-    link.href = `mailto:${value}`;
-  } else {
-    const url = new URL(value, window.location.href);
-    if (!["https:", "http:", "file:"].includes(url.protocol)) continue;
-    link.href = url.href;
-    if (kind === "linkedin") {
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
+document.querySelector('#year').textContent = new Date().getFullYear();
+for (const button of document.querySelectorAll('[data-copy]')) {
+  let resetTimer;
+  button.addEventListener('click', async () => {
+    const value = button.dataset.copy;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(value);
+      } else {
+        const field = document.createElement('textarea');
+        field.value = value;
+        field.setAttribute('readonly', '');
+        field.style.cssText = 'position:fixed;left:-9999px;top:0';
+        document.body.append(field);
+        let copied = false;
+        try {
+          field.select();
+          copied = document.execCommand('copy');
+        } finally {
+          field.remove();
+          button.focus({ preventScroll: true });
+        }
+        if (!copied) throw new Error('Copy unavailable');
+      }
+      clearTimeout(resetTimer);
+      button.querySelector('.copy-label').textContent = 'Copied';
+      resetTimer = setTimeout(() => { button.querySelector('.copy-label').textContent = 'Copy'; }, 2000);
+    } catch {
+      button.querySelector('.copy-label').textContent = 'Try again';
     }
-  }
-  link.hidden = false;
-  availableContacts++;
+  });
 }
-if (availableContacts) document.querySelector("#contact-pending").hidden = true;
-document.querySelector("#year").textContent = new Date().getFullYear();
