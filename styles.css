@@ -141,3 +141,11 @@
 }
 @media(hover:none){.image-viewer button:hover{background:transparent}.image-viewer button:active{background:#e3e8da}}
 @media(max-height:450px) and (orientation:landscape){.image-viewer{height:82svh;max-height:82svh}.image-viewer[open]{grid-template-rows:36px minmax(0,1fr) 44px;gap:6px}.viewer-controls{height:44px}}
+
+/* More visible case-study actions, with accessible clickable covers. */
+.project details>summary{font-size:15px;font-weight:500;color:#354c36;padding:17px 0;min-height:54px;transition:background-color .15s ease}
+.project details>summary>span{font-size:25px;color:#354c36}
+@media(hover:hover){.project details>summary:hover{background:#e3e8da80}.project button.cover:hover{box-shadow:0 0 0 2px #a8b79d}}
+.project button.cover{width:100%;border:0;text-align:left;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;touch-action:manipulation;transition:box-shadow .15s ease}
+.project button.cover:focus-visible{outline:2px solid #526847;outline-offset:5px}
+@media(max-width:600px){.project details>summary{font-size:14px;min-height:52px}}

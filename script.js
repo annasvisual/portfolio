@@ -100,3 +100,15 @@ if (viewer && typeof viewer.showModal === 'function') {
     opener?.focus({ preventScroll: true });
   });
 }
+
+// Covers and disclosure rows operate the same case study.
+for (const cover of document.querySelectorAll('button.cover')) {
+  const details = document.getElementById(cover.getAttribute('aria-controls'));
+  if (!details) continue;
+  cover.setAttribute('aria-expanded', String(details.open));
+  cover.addEventListener('click', () => {
+    details.open = !details.open;
+    cover.setAttribute('aria-expanded', String(details.open));
+  });
+  details.addEventListener('toggle', () => cover.setAttribute('aria-expanded', String(details.open)));
+}
