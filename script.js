@@ -62,6 +62,27 @@ if (viewer && typeof viewer.showModal === 'function') {
     viewer.showModal();
     viewer.querySelector('.viewer-close').focus();
   }));
+  // Horizontal swipes navigate; vertical scrolling and pinch zoom stay available.
+  const swipeSurface = viewer.querySelector('.viewer-image-wrap');
+  let swipeStart = null;
+  swipeSurface.addEventListener('touchstart', event => {
+    if (event.touches.length !== 1) { swipeStart = null; return; }
+    const touch = event.touches[0];
+    swipeStart = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+  }, { passive: true });
+  swipeSurface.addEventListener('touchend', event => {
+    if (!swipeStart || event.touches.length || !event.changedTouches.length) return;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - swipeStart.x;
+    const dy = touch.clientY - swipeStart.y;
+    const elapsed = Date.now() - swipeStart.time;
+    swipeStart = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5 && elapsed < 700 && (window.visualViewport?.scale || 1) <= 1.05) {
+      showImage(current + (dx < 0 ? 1 : -1));
+    }
+  }, { passive: true });
+  swipeSurface.addEventListener('touchcancel', () => { swipeStart = null; }, { passive: true });
+  picture.draggable = false;
   viewer.querySelector('.viewer-close').addEventListener('click', () => viewer.close());
   viewer.querySelector('.viewer-prev').addEventListener('click', () => showImage(current - 1));
   viewer.querySelector('.viewer-next').addEventListener('click', () => showImage(current + 1));
