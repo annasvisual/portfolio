@@ -109,6 +109,14 @@ for (const cover of document.querySelectorAll('button.cover')) {
   cover.addEventListener('click', () => {
     details.open = !details.open;
     cover.setAttribute('aria-expanded', String(details.open));
+    if (details.open) {
+      requestAnimationFrame(() => {
+        details.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+          block: 'start'
+        });
+      });
+    }
   });
   details.addEventListener('toggle', () => cover.setAttribute('aria-expanded', String(details.open)));
 }

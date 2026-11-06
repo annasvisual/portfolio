@@ -149,3 +149,12 @@
 .project button.cover{width:100%;border:0;text-align:left;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;touch-action:manipulation;transition:box-shadow .15s ease}
 .project button.cover:focus-visible{outline:2px solid #526847;outline-offset:5px}
 @media(max-width:600px){.project details>summary{font-size:14px;min-height:52px}}
+
+/* No touch highlight or sticky hover on case controls. */
+.project button.cover,.project details>summary{-webkit-tap-highlight-color:transparent}
+.project details{scroll-margin-top:24px}
+@media(hover:none), (pointer:coarse){
+ .project button.cover:hover,.project button.cover:active{box-shadow:none}
+ .project details>summary:hover,.project details>summary:active{background:transparent}
+ .project button.cover,.project details>summary{transition:none;touch-action:manipulation}
+}
